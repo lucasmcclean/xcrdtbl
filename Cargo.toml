@@ -4,6 +4,6 @@ version = "0.1.0"
 authors = ["Lucas McClean <lucas@mcclean.dev>"]
 edition = "2024"
 description = "Experimental CRDT library"
-license = "MIT"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
