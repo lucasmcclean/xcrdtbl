@@ -1,36 +1,36 @@
 use std::collections::HashMap;
-use std::hash::Hash;
 
+use crate::crdt::Actor;
 use crate::crdt::traits::Join;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
-pub struct GCounter<Id: Eq + Hash + Copy> {
+pub struct GCounter<A: Actor> {
     total: u64,
-    counts: HashMap<Id, u64>,
+    counts: HashMap<A, u64>,
 }
 
-impl<Id: Eq + Hash + Copy> Default for GCounter<Id> {
+impl<A: Actor> Default for GCounter<A> {
     fn default() -> Self {
         Self {
-            counts: HashMap::new(),
             total: 0,
+            counts: HashMap::new(),
         }
     }
 }
 
-impl<Id: Eq + Hash + Copy> GCounter<Id> {
+impl<A: Actor> GCounter<A> {
     pub fn new() -> Self {
         Self::default()
     }
 
-    pub fn inc_by(&mut self, replica: Id, delta: u64) {
-        let entry = self.counts.entry(replica).or_insert(0);
+    pub fn inc_by(&mut self, actor: A, delta: u64) {
+        let entry = self.counts.entry(actor).or_insert(0);
         *entry = entry.saturating_add(delta);
         self.total = self.total.saturating_add(delta);
     }
 
-    pub fn inc(&mut self, replica: Id) {
-        self.inc_by(replica, 1)
+    pub fn inc(&mut self, actor: A) {
+        self.inc_by(actor, 1)
     }
 
     pub fn value(&self) -> u64 {
@@ -38,27 +38,14 @@ impl<Id: Eq + Hash + Copy> GCounter<Id> {
     }
 }
 
-impl<Id: Eq + Hash + Copy> Join for GCounter<Id> {
-    fn join(&self, other: &Self) -> Self {
-        let mut out = self.clone();
-        out.merge(other);
-        out
-    }
-
+impl<A: Actor> Join for GCounter<A> {
     fn merge(&mut self, other: &Self) {
-        for (&rep, &value) in other.counts.iter() {
-            self.counts
-                .entry(rep)
-                .and_modify(|v| {
-                    if *v < value {
-                        self.total = self.total.saturating_add(value - *v);
-                        *v = value;
-                    }
-                })
-                .or_insert_with(|| {
-                    self.total = self.total.saturating_add(value);
-                    value
-                });
+        for (&actor, &value) in &other.counts {
+            let entry = self.counts.entry(actor).or_insert(0);
+            if value > *entry {
+                self.total = self.total.saturating_add(value - *entry);
+                *entry = value;
+            }
         }
     }
 }
