@@ -1,7 +1,7 @@
 use crate::crdt::{Actor, traits::Join};
 use chrono::{DateTime, Utc};
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Lww<T: Clone + Eq, A: Actor> {
     value: T,
     timestamp: DateTime<Utc>,

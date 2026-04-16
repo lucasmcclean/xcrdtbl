@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display};
 
 use crate::crdt::Actor;
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Dot<A: Actor> {
     pub actor: A,
     pub counter: u64,

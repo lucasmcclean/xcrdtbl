@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::crdt::Actor;
 use crate::crdt::traits::Join;
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct GCounter<A: Actor> {
     total: u64,
     counts: HashMap<A, u64>,
