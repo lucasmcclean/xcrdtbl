@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::crdt::Actor;
 use crate::crdt::traits::Join;
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct GCounter<A: Actor> {
     total: u64,

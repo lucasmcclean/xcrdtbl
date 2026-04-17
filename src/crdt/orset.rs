@@ -7,6 +7,7 @@ use crate::crdt::{Actor, Dot, traits::Join};
 
 type Seen<A> = HashSet<Dot<A>>;
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ORSet<E: Eq + Hash, A: Actor> {
     adds: HashMap<E, HashSet<Dot<A>>>,

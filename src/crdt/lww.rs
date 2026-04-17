@@ -1,6 +1,7 @@
 use crate::crdt::{Actor, traits::Join};
 use chrono::{DateTime, Utc};
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Lww<T: Clone + Eq, A: Actor> {
     value: T,

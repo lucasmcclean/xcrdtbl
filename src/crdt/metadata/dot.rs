@@ -2,6 +2,7 @@ use std::fmt::{Debug, Display};
 
 use crate::crdt::Actor;
 
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Dot<A: Actor> {
     pub actor: A,
